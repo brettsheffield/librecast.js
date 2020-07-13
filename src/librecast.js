@@ -3,7 +3,7 @@
  *
  * this file is part of LIBRECAST
  *
- * Copyright (c) 2017 Brett Sheffield <brett@gladserv.com>
+ * Copyright (c) 2017, 2020 Brett Sheffield <brett@gladserv.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -342,20 +342,23 @@ lc.Context.prototype.send = function(obj, opcode, callback, data, len, temp) {
 // Librecast.Channel -----------------------------------------------------------
 //
 
-lc.Channel = function(lctx, name, onready) {
+//lc.Channel = function(lctx, name, onready) {
+lc.Channel = function(lctx, name) {
 	console.log("Channel constructor");
-
 	if (name == undefined) { throw new LibrecastException(lc.ERR_MISSING_ARG); }
-
 	this.lctx = lctx;
 	this.id = undefined;
 	this.ws = lctx.websocket;
 	this.name = name;
-	var cb = new LibrecastCallback(this, null, onready);
-	this.onready = cb;
-	lctx.send(this, lc.OP_CHANNEL_NEW, this.ready, name, name.length);
+};
 
-	this.defer = defer();
+lc.Channel.prototype.init = function() {
+	return new Promise(resolve => {
+		this.lctx.send(this, lc.OP_CHANNEL_NEW, (cb, opcode, len, id) => {
+			this.id = id;
+			resolve(this);
+		}, this.name, this.name.length);
+	});
 };
 
 lc.Channel.prototype.bindSocket = function(sock, callback) {
@@ -438,35 +441,31 @@ lc.Channel.prototype.send = function(msg) {
 	}
 };
 
+
 //
 // Librecast.Socket ------------------------------------------------------------
 //
 
-lc.Socket = function(lctx, onready) {
+//lc.Socket = function(lctx, onready) {
+lc.Socket = function(lctx) {
 	console.log("Socket constructor");
 	this.lctx = lctx;
 	this.id = undefined;
-	var cb = new LibrecastCallback(this, null, onready, true);
-	this.onready = cb;
 	this.onmessage = undefined;
-	lctx.send(this, lc.OP_SOCKET_NEW, this.ready);
-	this.defer = defer();
+};
+
+lc.Socket.prototype.init = function () {
+	return new Promise(resolve => {
+		this.lctx.send(this, lc.OP_SOCKET_NEW, (cb, opcode, len, id) => {
+			console.log("Socket.ready()");
+			this.id = id;
+			resolve(this);
+		});
+	});
 };
 
 lc.Socket.prototype.listen = function (callback) {
 	this.lctx.send(this, lc.OP_SOCKET_LISTEN, callback);
-};
-
-lc.Socket.prototype.ready = function (cb, opcode, len, id) {
-	console.log("Socket.ready()");
-
-	var self = cb.obj;
-	self.id = id;
-	if (self.defer) {
-		console.log("resolving Socket.defer");
-		self.defer.resolve();
-	}
-	self.onready.trigger();
 };
 
 
