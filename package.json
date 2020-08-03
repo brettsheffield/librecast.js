@@ -1,0 +1,33 @@
+{
+  "name": "@librestack/librecast",
+  "version": "0.0.0",
+  "description": "Javascript library for managing librecast communications.",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/*.ts",
+    "build": "webpack",
+    "watch": "concurrently \"npm run tscw\" \"webpack -w\" \"firefox http://localhost:8080/\"",
+    "tsc": "tsc",
+    "tscw": "tsc -w",
+    "httpd": "lite-server",
+    "start": "concurrently \"npm run tscw\" \"webpack -w\" \"npm run httpd\" ",
+    "clean": "rm -f src/*.js src/*.map src/components/*.js src/components/*.map",
+    "realclean": "npm run clean ; rm -f js/*"
+  },
+  "keywords": [],
+  "author": "Brett A C Sheffield <bacs@librecast.net> (http://brettsheffield.com/)",
+  "license": "GPL-3.0-or-later",
+  "browserslist": [
+    "defaults",
+    "Chrome >= 16",
+    "Firefox >=9",
+    "IE >= 10",
+    "Safari >= 6.2.8",
+    "maintained node versions"
+  ],
+  "devDependencies": {
+    "qunit": "^2.10.1"
+  },
+  "dependencies": {}
+}
