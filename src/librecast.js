@@ -446,9 +446,9 @@ lc.Channel.prototype.send = function(msg) {
 // Librecast.Socket ------------------------------------------------------------
 //
 
-//lc.Socket = function(lctx, onready) {
 lc.Socket = function(lctx) {
 	console.log("Socket constructor");
+	if (lctx === undefined) throw new Error("Librecast.Context required");
 	this.lctx = lctx;
 	this.id = undefined;
 	this.onmessage = undefined;

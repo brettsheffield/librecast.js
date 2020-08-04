@@ -27,7 +27,9 @@
     "maintained node versions"
   ],
   "devDependencies": {
-    "qunit": "^2.10.1"
+    "qunit": "^2.10.1",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {}
 }
