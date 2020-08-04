@@ -1,5 +1,5 @@
 QUnit.module('Signup', function() {
-	QUnit.test("librecastLiveSignup()", function(assert) {
+	QUnit.todo("librecastLiveSignup()", function(assert) {
 		return false;
 	});
 });
